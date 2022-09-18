@@ -1,0 +1,27 @@
+body{
+	background-color: black;
+}
+
+.wrapper{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+}
+.microphoneWrapper{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.microphoneWrapper > img{
+	width: 300px;
+}
+
+.glow {
+	border: 5px solid blue;
+	border-radius: 200px;
+}
+
+@keyframes glowAnimation {
+
+}
