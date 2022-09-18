@@ -50,6 +50,7 @@ function addRecording(rec) {
         .then(function (res) { return res.json(); })
         .then(function (res) {
         console.log(res);
+        alert(res.text);
         msgs.push(res.text);
         callAlbert();
         return res;

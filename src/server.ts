@@ -23,7 +23,8 @@ app.post("/albert", async (req: Request, res: Response) => {
   let msgs = req.body.text;
   let chatPrompt =
     "An understanding therapy bot named Albert in a supporting conversation with a Human\n" +
-    msgs;
+    msgs +
+    "Albert: ";
 
   console.log("---", chatPrompt, "---");
   // let albert = false;
@@ -79,7 +80,7 @@ app.post("/transcribe", async (req: Request, res: Response) => {
     audio_url: fileLink,
   });
 
-  await new Promise((resolve) => setTimeout(resolve, 10000)); // 3 sec
+  await new Promise((resolve) => setTimeout(resolve, 15000)); // 3 sec
 
   const response = await assembly.get("/transcript", {
     audio_url: fileLink,

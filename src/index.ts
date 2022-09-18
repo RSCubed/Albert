@@ -14,6 +14,7 @@ function addRecording(rec: any): string {
     .then((res) => res.json())
     .then((res) => {
       console.log(res);
+      alert(res.text);
       msgs.push(res.text);
       callAlbert();
       return res;

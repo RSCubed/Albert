@@ -62,7 +62,8 @@ app.post("/albert", function (req, res) { return __awaiter(void 0, void 0, void 
                 console.log("albert called");
                 msgs = req.body.text;
                 chatPrompt = "An understanding therapy bot named Albert in a supporting conversation with a Human\n" +
-                    msgs;
+                    msgs +
+                    "Albert: ";
                 console.log("---", chatPrompt, "---");
                 // let albert = false;
                 // for (let i = 0; i < msgs.length; i++) {
@@ -126,7 +127,7 @@ app.post("/transcribe", function (req, res) { return __awaiter(void 0, void 0, v
                     })];
             case 3:
                 _a.sent();
-                return [4 /*yield*/, new Promise(function (resolve) { return setTimeout(resolve, 10000); })];
+                return [4 /*yield*/, new Promise(function (resolve) { return setTimeout(resolve, 15000); })];
             case 4:
                 _a.sent(); // 3 sec
                 return [4 /*yield*/, assembly.get("/transcript", {
