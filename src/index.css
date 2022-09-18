@@ -66,10 +66,26 @@ body{
 	overflow-x: initial;
 }
 
-.glow {
-	border: 5px solid blue;
-	border-radius: 200px;
+@keyframes glowAnim {
+	0%{
+		border: 5px solid blue;
+	}
+	50%{
+		border: 25px solid blue;
+	}
+	100%{
+		border: 5px solid blue;
+	}
 }
+.glow {
+	border-radius: 200px;
+	border: 5px solid blue;
+	animation-name: glowAnim;
+	animation-duration: 2s;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+}
+
 
 @keyframes glowAnimation {
 
