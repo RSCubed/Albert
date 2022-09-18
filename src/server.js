@@ -83,13 +83,13 @@ app.post("/albert", function (req, res) { return __awaiter(void 0, void 0, void 
             case 1:
                 response = _a.sent();
                 console.log("Prediction: ".concat(response.body.generations[0].text));
-                res.json({ albert: response.body.generations[0].text });
+                res.json({ text: response.body.generations[0].text });
                 return [2 /*return*/];
         }
     });
 }); });
 app.post("/transcribe", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var data, assemblyUpload, file, fileLink, fileData, uploadResponse, assembly, response, i, transcript, words;
+    var data, assemblyUpload, file, fileLink, fileData, uploadResponse, assembly, response, i, transcript, words, text;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -140,7 +140,8 @@ app.post("/transcribe", function (req, res) { return __awaiter(void 0, void 0, v
                 return [4 /*yield*/, assembly.get(transcript.resource_url)];
             case 6:
                 words = _a.sent();
-                res.send(JSON.stringify({ text: words.data.text }));
+                text = words.data.text;
+                res.send(JSON.stringify({ text: text }));
                 return [2 /*return*/];
         }
     });

@@ -3,6 +3,13 @@ var msgs: Array<string> = ["Hello, how can I help today?"];
 
 function addRecording(rec: any): string {
   console.log("inside add rexroidng");
+  const microphoneIcon = document.getElementById("microphone");
+  const microphone = document.getElementById("microphoneLoader");
+
+  console.log(microphoneIcon, microphone);
+  microphoneIcon.style.display = "none";
+  microphone.style.display = "inline-block";
+
   fetch("./transcribe", {
     method: "POST",
     headers: {
@@ -14,9 +21,12 @@ function addRecording(rec: any): string {
     .then((res) => res.json())
     .then((res) => {
       console.log(res);
-      alert(res.text);
       msgs.push(res.text);
+      displayMsgs();
       callAlbert();
+      microphone.style.display = "none";
+      microphoneIcon.style.display = "inline-block";
+
       return res;
     })
     .catch((err) => {
@@ -50,16 +60,36 @@ function callAlbert() {
     body: JSON.stringify({ text: output }),
   })
     .then((res) => res.json())
-    .then((response) => {
-      let res: string = response.result;
-      var sp1 = msgs.push(res);
+    .then((res) => {
+      const msg = res.text;
+      msgs.push(msg);
+      displayMsgs();
     })
-    .catch((err) => {
-      msgs.push("");
-    });
+    .catch((err) => {});
   return msgs;
 }
 
+displayMsgs();
+function displayMsgs() {
+  const text = document.getElementById("text");
+
+  let output = "";
+
+  msgs.forEach((msg, i) => {
+    if (i % 2 == 0) {
+      output +=
+        '<div class="textInnerAlbert"><span class="albert">Albert</span> ' +
+        msg +
+        "</div>";
+    } else {
+      output +=
+        '<div class="textInnerHuman"><span class="human">You</span> ' +
+        msg +
+        "</div>";
+    }
+  });
+  text.innerHTML = output;
+}
 //**blob to dataURL**
 function blobToDataURL(blob, callback) {
   var a = new FileReader();

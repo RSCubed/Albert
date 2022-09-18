@@ -39,6 +39,11 @@ var _this = this;
 var msgs = ["Hello, how can I help today?"];
 function addRecording(rec) {
     console.log("inside add rexroidng");
+    var microphoneIcon = document.getElementById("microphone");
+    var microphone = document.getElementById("microphoneLoader");
+    console.log(microphoneIcon, microphone);
+    microphoneIcon.style.display = "none";
+    microphone.style.display = "inline-block";
     fetch("./transcribe", {
         method: "POST",
         headers: {
@@ -50,9 +55,11 @@ function addRecording(rec) {
         .then(function (res) { return res.json(); })
         .then(function (res) {
         console.log(res);
-        alert(res.text);
         msgs.push(res.text);
+        displayMsgs();
         callAlbert();
+        microphone.style.display = "none";
+        microphoneIcon.style.display = "inline-block";
         return res;
     })
         .catch(function (err) {
@@ -82,14 +89,33 @@ function callAlbert() {
         body: JSON.stringify({ text: output }),
     })
         .then(function (res) { return res.json(); })
-        .then(function (response) {
-        var res = response.result;
-        var sp1 = msgs.push(res);
+        .then(function (res) {
+        var msg = res.text;
+        msgs.push(msg);
+        displayMsgs();
     })
-        .catch(function (err) {
-        msgs.push("");
-    });
+        .catch(function (err) { });
     return msgs;
+}
+displayMsgs();
+function displayMsgs() {
+    var text = document.getElementById("text");
+    var output = "";
+    msgs.forEach(function (msg, i) {
+        if (i % 2 == 0) {
+            output +=
+                '<div class="textInnerAlbert"><span class="albert">Albert</span> ' +
+                    msg +
+                    "</div>";
+        }
+        else {
+            output +=
+                '<div class="textInnerHuman"><span class="human">You</span> ' +
+                    msg +
+                    "</div>";
+        }
+    });
+    text.innerHTML = output;
 }
 //**blob to dataURL**
 function blobToDataURL(blob, callback) {

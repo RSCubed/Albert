@@ -8,17 +8,26 @@
   </head>
   <body>
     <div class="wrapper">
-      <div class="messagesWrapper">
-        
-      </div>
+      <div class="messagesWrapper"></div>
       <div class="microphoneWrapper">
         <img
           src="./microphone.png"
           id="microphone"
           onclick="audioButtonClicked()"
           draggable="false"
+          width="200"
+        />
+        <img
+          src="./loading.gif"
+          id="microphoneLoader"
+          style="display: none"
+          onclick="audioButtonClicked()"
+          draggable="false"
+          width="300"
         />
       </div>
+
+      <div id="text"></div>
     </div>
 
     <link href="./index.css" rel="stylesheet" />

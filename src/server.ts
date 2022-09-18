@@ -45,7 +45,7 @@ app.post("/albert", async (req: Request, res: Response) => {
     stop_sequences: ["\n"],
   });
   console.log(`Prediction: ${response.body.generations[0].text}`);
-  res.json({ albert: response.body.generations[0].text });
+  res.json({ text: response.body.generations[0].text });
 });
 
 app.post("/transcribe", async (req: Request, res: Response) => {
@@ -98,7 +98,12 @@ app.post("/transcribe", async (req: Request, res: Response) => {
   // console.log(transcript);
 
   const words = await assembly.get(transcript.resource_url);
-  res.send(JSON.stringify({ text: words.data.text }));
+  const text = words.data.text;
+  res.send(JSON.stringify({ text: text }));
+
+  // const albertResponse = text.split("Albert:");
+  // console.log(text);
+  // console.log(albertResponse[albertResponse.length - 1]);
 });
 
 app.listen(port, () => {

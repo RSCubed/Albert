@@ -1,10 +1,13 @@
 body{
 	background-color: black;
+	color: white;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .wrapper{
 	display: flex;
 	justify-content: center;
+	flex-direction: column;
 	align-items: center;
 	height: 100vh;
 }
@@ -12,9 +15,55 @@ body{
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	margin: 10px;
+	margin-bottom: 50px;
 }
-.microphoneWrapper > img{
+.textInnerAlbert{
+	margin-top: 10px;
+	background-color: darkblue;
+	padding-left: 0;
+	border-radius: 10px;
+	padding:5px;
+	padding-right: 30px;
+	display: flex;
+	/* flex-direction: row-reverse; */
+	align-items: center;
+}
+.albert{
+	background-color: blue;
+	color: white;
+	padding: 10px;
+	margin:5px;
+	border-radius: 10px;
+}
+.textInnerHuman{
+	margin-top: 10px;
+	background-color: darkred;
+	padding-left: 0;
+	border-radius: 10px;
+	padding:5px;
+	padding-right: 30px;
+	display: flex;
+	/* flex-direction: row-reverse; */
+	align-items: center;
+}
+.human{
+	background-color: red;
+	color: white;
+	padding: 10px;
+	margin:5px;
+	border-radius: 10px;
+}
+/* .microphoneWrapper > img{
 	width: 300px;
+} */
+
+#text{
+	display: flex;
+	flex-direction: column;
+	overflow: auto;
+	height: 50vh;
+	overflow-x: initial;
 }
 
 .glow {
@@ -24,4 +73,20 @@ body{
 
 @keyframes glowAnimation {
 
+}
+
+::-webkit-scrollbar {
+	height: 12px;
+	width: 12px;
+	background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+	background: #313636;
+	-webkit-border-radius: 1ex;
+	-webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.75);
+}
+
+::-webkit-scrollbar-corner {
+	background: #000;
 }
