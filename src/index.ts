@@ -1,4 +1,5 @@
-var msgs = []; //string array of all messages sent, every other value is sent, received, sent, received
+//string array of all messages sent, every other value is sent, received, sent, received
+var msgs: Array<string> = ["Hello, how can I help today?"];
 
 function addRecording(rec: any): string {
   console.log("inside add rexroidng");
@@ -13,7 +14,8 @@ function addRecording(rec: any): string {
     .then((res) => res.json())
     .then((res) => {
       console.log(res);
-      alert(res.text);
+      msgs.push(res.text);
+      callAlbert();
       return res;
     })
     .catch((err) => {
@@ -23,19 +25,28 @@ function addRecording(rec: any): string {
   return "";
 }
 
-function apiResult(rec: any) {
-  // var userText: string = addRecording(rec);
-  // if (userText == "") {
-  //   return;
-  // }
-  // msgs.push(userText);
-  // let res: string = ""; //call from response api: response(msgs)
-  // msgs.push(res);
-  // return res;
+// callAlbert();
 
-  fetch("http:/localhost:3000/albert", {
+function callAlbert() {
+  let output = "";
+
+  msgs.forEach((msg, i) => {
+    if (i % 2 == 0) {
+      output += "Albert: " + msg + "\n";
+    } else {
+      output += "Human: " + msg + "\n";
+    }
+  });
+
+  console.log(output);
+
+  fetch("./albert", {
     method: "POST",
-    body: rec,
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ text: output }),
   })
     .then((res) => res.json())
     .then((response) => {

@@ -1,27 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -64,7 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var dotenv_1 = __importDefault(require("dotenv"));
-var cohere = __importStar(require("cohere-ai"));
+var cohere = require("cohere-ai");
 dotenv_1.default.config();
 var app = (0, express_1.default)();
 var port = process.env.PORT;
@@ -77,37 +54,39 @@ app.use(express_1.default.static("src"));
 app.get("/", function (req, res) {
     res.sendFile("index.html", { root: __dirname });
 });
-app.post("/albert", function (req, res) {
-    var msgs = req.body;
-    var chatPrompt = "An understanding bot named Albert in a supporting conversation with a Human";
-    var albert = false;
-    for (var i = 0; i < msgs.length; i++) {
-        if (albert) {
-            chatPrompt += "Albert: ";
-        }
-        else {
-            chatPrompt += "Human: ";
-        }
-        chatPrompt += msgs[i];
-        chatPrompt += "\n";
-    }
-    (function () { return __awaiter(void 0, void 0, void 0, function () {
-        var response;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, cohere.generate({
+app.post("/albert", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var msgs, chatPrompt, response;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                console.log("albert called");
+                msgs = req.body.text;
+                chatPrompt = "An understanding therapy bot named Albert in a supporting conversation with a Human\n" +
+                    msgs;
+                console.log("---", chatPrompt, "---");
+                // let albert = false;
+                // for (let i = 0; i < msgs.length; i++) {
+                //   if (albert) {
+                //     chatPrompt += "Albert: ";
+                //   } else {
+                //     chatPrompt += "Human: ";
+                //   }
+                //   chatPrompt += msgs[i];
+                //   chatPrompt += "\n";
+                // }
+                cohere.init(cohereKey);
+                return [4 /*yield*/, cohere.generate({
                         prompt: chatPrompt,
                         stop_sequences: ["\n"],
                     })];
-                case 1:
-                    response = _a.sent();
-                    console.log("Prediction: ".concat(response.body.generations[0].text));
-                    res.json({ albert: response.body.generations[0].text });
-                    return [2 /*return*/];
-            }
-        });
-    }); })();
-});
+            case 1:
+                response = _a.sent();
+                console.log("Prediction: ".concat(response.body.generations[0].text));
+                res.json({ albert: response.body.generations[0].text });
+                return [2 /*return*/];
+        }
+    });
+}); });
 app.post("/transcribe", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var data, assemblyUpload, file, fileLink, fileData, uploadResponse, assembly, response, i, transcript, words;
     return __generator(this, function (_a) {
@@ -147,7 +126,7 @@ app.post("/transcribe", function (req, res) { return __awaiter(void 0, void 0, v
                     })];
             case 3:
                 _a.sent();
-                return [4 /*yield*/, new Promise(function (resolve) { return setTimeout(resolve, 15000); })];
+                return [4 /*yield*/, new Promise(function (resolve) { return setTimeout(resolve, 10000); })];
             case 4:
                 _a.sent(); // 3 sec
                 return [4 /*yield*/, assembly.get("/transcript", {
@@ -157,13 +136,6 @@ app.post("/transcribe", function (req, res) { return __awaiter(void 0, void 0, v
                 response = _a.sent();
                 i = response.data.transcripts.length - 1;
                 transcript = response.data.transcripts[0];
-                // console.log(response.data.transcripts);
-                // while (transcript.status !== "completed") {
-                //   console.log(transcript);
-                //   i -= 1;
-                //   transcript = response.data.transcripts[i];
-                // }
-                console.log(transcript);
                 return [4 /*yield*/, assembly.get(transcript.resource_url)];
             case 6:
                 words = _a.sent();

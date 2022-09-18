@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -35,7 +34,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var msgs = []; //string array of all messages sent, every other value is sent, received, sent, received
+var _this = this;
+//string array of all messages sent, every other value is sent, received, sent, received
+var msgs = ["Hello, how can I help today?"];
 function addRecording(rec) {
     console.log("inside add rexroidng");
     fetch("./transcribe", {
@@ -49,7 +50,8 @@ function addRecording(rec) {
         .then(function (res) { return res.json(); })
         .then(function (res) {
         console.log(res);
-        alert(res.text);
+        msgs.push(res.text);
+        callAlbert();
         return res;
     })
         .catch(function (err) {
@@ -58,18 +60,25 @@ function addRecording(rec) {
     });
     return "";
 }
-function apiResult(rec) {
-    // var userText: string = addRecording(rec);
-    // if (userText == "") {
-    //   return;
-    // }
-    // msgs.push(userText);
-    // let res: string = ""; //call from response api: response(msgs)
-    // msgs.push(res);
-    // return res;
-    fetch("http:/localhost:3000/albert", {
+// callAlbert();
+function callAlbert() {
+    var output = "";
+    msgs.forEach(function (msg, i) {
+        if (i % 2 == 0) {
+            output += "Albert: " + msg + "\n";
+        }
+        else {
+            output += "Human: " + msg + "\n";
+        }
+    });
+    console.log(output);
+    fetch("./albert", {
         method: "POST",
-        body: rec,
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text: output }),
     })
         .then(function (res) { return res.json(); })
         .then(function (response) {
@@ -90,7 +99,7 @@ function blobToDataURL(blob, callback) {
     a.readAsDataURL(blob);
 }
 var recordAudio = function () {
-    return new Promise(function (resolve) { return __awaiter(void 0, void 0, void 0, function () {
+    return new Promise(function (resolve) { return __awaiter(_this, void 0, void 0, function () {
         var stream, mediaRecorder, audioChunks, start, stop;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -135,7 +144,7 @@ var sleep = function (time) { return new Promise(function (resolve) { return set
 var recording = false;
 var audioChunks = [];
 var recorder;
-(function () { return __awaiter(void 0, void 0, void 0, function () {
+(function () { return __awaiter(_this, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, recordAudio()];

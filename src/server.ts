@@ -1,6 +1,6 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
-import * as cohere from "cohere-ai";
+const cohere = require("cohere-ai");
 
 dotenv.config();
 
@@ -18,31 +18,33 @@ app.get("/", (req: Request, res: Response) => {
   res.sendFile("index.html", { root: __dirname });
 });
 
-app.post("/albert", (req: Request, res: Response) => {
-  let msgs = req.body;
+app.post("/albert", async (req: Request, res: Response) => {
+  console.log("albert called");
+  let msgs = req.body.text;
   let chatPrompt =
-    "An understanding bot named Albert in a supporting conversation with a Human";
+    "An understanding therapy bot named Albert in a supporting conversation with a Human\n" +
+    msgs;
 
-  let albert = false;
-  for (let i = 0; i < msgs.length; i++) {
-    if (albert) {
-      chatPrompt += "Albert: ";
-    } else {
-      chatPrompt += "Human: ";
-    }
-    chatPrompt += msgs[i];
-    chatPrompt += "\n";
-  }
+  console.log("---", chatPrompt, "---");
+  // let albert = false;
+  // for (let i = 0; i < msgs.length; i++) {
+  //   if (albert) {
+  //     chatPrompt += "Albert: ";
+  //   } else {
+  //     chatPrompt += "Human: ";
+  //   }
+  //   chatPrompt += msgs[i];
+  //   chatPrompt += "\n";
+  // }
 
-  (async () => {
-    //@ts-ignore
-    const response = await cohere.generate({
-      prompt: chatPrompt,
-      stop_sequences: ["\n"],
-    });
-    console.log(`Prediction: ${response.body.generations[0].text}`);
-    res.json({ albert: response.body.generations[0].text });
-  })();
+  cohere.init(cohereKey);
+  //@ts-ignore
+  const response = await cohere.generate({
+    prompt: chatPrompt,
+    stop_sequences: ["\n"],
+  });
+  console.log(`Prediction: ${response.body.generations[0].text}`);
+  res.json({ albert: response.body.generations[0].text });
 });
 
 app.post("/transcribe", async (req: Request, res: Response) => {
@@ -77,7 +79,7 @@ app.post("/transcribe", async (req: Request, res: Response) => {
     audio_url: fileLink,
   });
 
-  await new Promise((resolve) => setTimeout(resolve, 15000)); // 3 sec
+  await new Promise((resolve) => setTimeout(resolve, 10000)); // 3 sec
 
   const response = await assembly.get("/transcript", {
     audio_url: fileLink,
@@ -92,7 +94,7 @@ app.post("/transcribe", async (req: Request, res: Response) => {
   //   i -= 1;
   //   transcript = response.data.transcripts[i];
   // }
-  console.log(transcript);
+  // console.log(transcript);
 
   const words = await assembly.get(transcript.resource_url);
   res.send(JSON.stringify({ text: words.data.text }));
