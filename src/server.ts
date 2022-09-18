@@ -10,6 +10,8 @@ const cohereKey = process.env.COHERE_API;
 const assemblyKey = process.env.ASSEMBLY_API;
 const axios = require("axios");
 const fs = require("fs");
+const prompt =
+  "An understanding, helpful, therapy bot named Albert who offers advice in a supporting conversation with a Human\n";
 
 app.use(express.json());
 app.use(express.static("src"));
@@ -21,10 +23,7 @@ app.get("/", (req: Request, res: Response) => {
 app.post("/albert", async (req: Request, res: Response) => {
   console.log("albert called");
   let msgs = req.body.text;
-  let chatPrompt =
-    "An understanding therapy bot named Albert in a supporting conversation with a Human\n" +
-    msgs +
-    "Albert: ";
+  let chatPrompt = prompt + msgs + "Albert: ";
 
   console.log("---", chatPrompt, "---");
   // let albert = false;
@@ -80,14 +79,22 @@ app.post("/transcribe", async (req: Request, res: Response) => {
     audio_url: fileLink,
   });
 
-  await new Promise((resolve) => setTimeout(resolve, 15000)); // 3 sec
+  let words;
+  let done = false;
 
-  const response = await assembly.get("/transcript", {
-    audio_url: fileLink,
-  });
-
-  let i = response.data.transcripts.length - 1;
-  let transcript = response.data.transcripts[0];
+  while (!done) {
+    const response = await assembly.get("/transcript", {
+      audio_url: fileLink,
+    });
+    let i = response.data.transcripts.length - 1;
+    let transcript = response.data.transcripts[0];
+    words = await assembly.get(transcript.resource_url);
+    if (words.data.status === "completed") {
+      done = true;
+    }
+    console.log(words);
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // 3 sec
+  }
 
   // console.log(response.data.transcripts);
   // while (transcript.status !== "completed") {
@@ -97,7 +104,6 @@ app.post("/transcribe", async (req: Request, res: Response) => {
   // }
   // console.log(transcript);
 
-  const words = await assembly.get(transcript.resource_url);
   const text = words.data.text;
   res.send(JSON.stringify({ text: text }));
 

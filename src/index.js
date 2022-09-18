@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var _this = this;
 //string array of all messages sent, every other value is sent, received, sent, received
-var msgs = ["Hello, how can I help today?"];
+var msgs = ["Hi! How can I help today?"];
 function addRecording(rec) {
     console.log("inside add rexroidng");
     var microphoneIcon = document.getElementById("microphone");
@@ -58,8 +58,6 @@ function addRecording(rec) {
         msgs.push(res.text);
         displayMsgs();
         callAlbert();
-        microphone.style.display = "none";
-        microphoneIcon.style.display = "inline-block";
         return res;
     })
         .catch(function (err) {
@@ -71,6 +69,8 @@ function addRecording(rec) {
 // callAlbert();
 function callAlbert() {
     var output = "";
+    var microphoneIcon = document.getElementById("microphone");
+    var microphone = document.getElementById("microphoneLoader");
     msgs.forEach(function (msg, i) {
         if (i % 2 == 0) {
             output += "Albert: " + msg + "\n";
@@ -92,6 +92,8 @@ function callAlbert() {
         .then(function (res) {
         var msg = res.text;
         msgs.push(msg);
+        microphone.style.display = "none";
+        microphoneIcon.style.display = "inline-block";
         displayMsgs();
     })
         .catch(function (err) { });
@@ -198,7 +200,7 @@ function audioButtonClicked() {
                         addRecording(dataurl);
                     });
                     recording = false;
-                    audio.play();
+                    // audio.play();
                     return [2 /*return*/];
                 case 2:
                     recording = true;

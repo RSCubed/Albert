@@ -49,6 +49,7 @@ var cohereKey = process.env.COHERE_API;
 var assemblyKey = process.env.ASSEMBLY_API;
 var axios = require("axios");
 var fs = require("fs");
+var prompt = "An understanding, helpful, therapy bot named Albert who offers advice in a supporting conversation with a Human\n";
 app.use(express_1.default.json());
 app.use(express_1.default.static("src"));
 app.get("/", function (req, res) {
@@ -61,9 +62,7 @@ app.post("/albert", function (req, res) { return __awaiter(void 0, void 0, void 
             case 0:
                 console.log("albert called");
                 msgs = req.body.text;
-                chatPrompt = "An understanding therapy bot named Albert in a supporting conversation with a Human\n" +
-                    msgs +
-                    "Albert: ";
+                chatPrompt = prompt + msgs + "Albert: ";
                 console.log("---", chatPrompt, "---");
                 // let albert = false;
                 // for (let i = 0; i < msgs.length; i++) {
@@ -89,7 +88,7 @@ app.post("/albert", function (req, res) { return __awaiter(void 0, void 0, void 
     });
 }); });
 app.post("/transcribe", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var data, assemblyUpload, file, fileLink, fileData, uploadResponse, assembly, response, i, transcript, words, text;
+    var data, assemblyUpload, file, fileLink, fileData, uploadResponse, assembly, words, done, response, i, transcript, text;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -127,9 +126,10 @@ app.post("/transcribe", function (req, res) { return __awaiter(void 0, void 0, v
                     })];
             case 3:
                 _a.sent();
-                return [4 /*yield*/, new Promise(function (resolve) { return setTimeout(resolve, 15000); })];
+                done = false;
+                _a.label = 4;
             case 4:
-                _a.sent(); // 3 sec
+                if (!!done) return [3 /*break*/, 8];
                 return [4 /*yield*/, assembly.get("/transcript", {
                         audio_url: fileLink,
                     })];
@@ -140,6 +140,15 @@ app.post("/transcribe", function (req, res) { return __awaiter(void 0, void 0, v
                 return [4 /*yield*/, assembly.get(transcript.resource_url)];
             case 6:
                 words = _a.sent();
+                if (words.data.status === "completed") {
+                    done = true;
+                }
+                console.log(words);
+                return [4 /*yield*/, new Promise(function (resolve) { return setTimeout(resolve, 1000); })];
+            case 7:
+                _a.sent(); // 3 sec
+                return [3 /*break*/, 4];
+            case 8:
                 text = words.data.text;
                 res.send(JSON.stringify({ text: text }));
                 return [2 /*return*/];

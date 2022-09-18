@@ -1,5 +1,5 @@
 //string array of all messages sent, every other value is sent, received, sent, received
-var msgs: Array<string> = ["Hello, how can I help today?"];
+var msgs: Array<string> = ["Hi! How can I help today?"];
 
 function addRecording(rec: any): string {
   console.log("inside add rexroidng");
@@ -24,9 +24,6 @@ function addRecording(rec: any): string {
       msgs.push(res.text);
       displayMsgs();
       callAlbert();
-      microphone.style.display = "none";
-      microphoneIcon.style.display = "inline-block";
-
       return res;
     })
     .catch((err) => {
@@ -40,6 +37,9 @@ function addRecording(rec: any): string {
 
 function callAlbert() {
   let output = "";
+
+  const microphoneIcon = document.getElementById("microphone");
+  const microphone = document.getElementById("microphoneLoader");
 
   msgs.forEach((msg, i) => {
     if (i % 2 == 0) {
@@ -63,6 +63,8 @@ function callAlbert() {
     .then((res) => {
       const msg = res.text;
       msgs.push(msg);
+      microphone.style.display = "none";
+      microphoneIcon.style.display = "inline-block";
       displayMsgs();
     })
     .catch((err) => {});
@@ -161,7 +163,7 @@ async function audioButtonClicked() {
     });
 
     recording = false;
-    audio.play();
+    // audio.play();
     return;
   }
   recording = true;
